@@ -1,0 +1,41 @@
+import random
+
+Suits = ['S', 'D', 'C', 'H']
+
+def Create_Deck():
+
+	deck = []
+
+	for i in Suits:
+		
+		for v in range (1, 14):
+
+			deck.append(str(i) + str(v))
+	
+	return(deck)
+
+def Shuffle(deck):
+	random.shuffle(deck)
+
+
+Deck = Create_Deck()
+Shuffle(Deck)
+
+Hand = []
+
+for i in range(5):
+	Hand.append(Deck.pop(0))
+
+def flush(hand):
+
+	Suit = list(hand[0])[0]
+
+	i = 0
+	while i < 5:
+		
+		if list(hand[i])[0] != Suit:
+			return False
+		
+		i += 1
+	
+	return True
