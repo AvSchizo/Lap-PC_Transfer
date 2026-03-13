@@ -1,0 +1,111 @@
+my @Primes = ();
+
+# chomp($Look = <STDIN>);
+
+my $cur = 2;
+
+while (split('', $cur) < 11) {
+
+    my $Prime = 1;
+
+    foreach (@Primes) {
+
+		if (($cur % $_) == 0) {
+		
+		$Prime = 0;
+		
+		}
+
+    }
+
+    if ($Prime == 1) {
+
+		push @Primes, $cur;
+
+    }
+    
+    $cur += 1;
+    
+}
+
+sub SC {
+    
+    my $ts = $_[0];
+    my $dz = $_[1];
+    
+    my @Digits = split( '', (($ts**2) + ($dz**3)) );
+    
+    return @Digits;
+}
+
+sub Check_Length {
+
+    my @Digits = @_;
+    
+    if (@Digits == 10) {
+        return 1;
+    }
+    
+    0;
+}
+
+
+my @Finals;
+my %Factors;
+
+foreach $ts (@Primes) {
+
+	foreach $dz (@Primes) {
+
+	    $op = (($ts**2) + ($dz**3));
+	            
+	    if (SC($ts, $dz) == 10) {
+	        
+		if (Check_Digits($op)) {
+			push @Finals, $op;
+	        $Factors{$op} = $ts . ", " . $dz;
+	      }
+	        
+	    }
+    
+  }
+
+}
+
+
+sub Check_Digits {
+
+	my @a;
+  
+	foreach my $Digit (split('', $_[0])) {
+	
+	my $Contained = 0;
+	
+	foreach (@a) {
+		
+		if ($Digit == $_) {
+			$Contained = 1;
+	  	}
+		
+	}
+	
+	if ($Contained == 0) {
+  		push @a, $Digit;
+	}
+	
+	}
+	
+	if (@a == 10) {
+	  	return 1;
+	}
+	
+	0;
+}
+
+foreach (@Finals) {
+	print "$_ | primes used: ";
+	print $Factors{$_};
+	print "\n";
+}
+
+
