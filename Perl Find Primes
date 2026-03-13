@@ -4,27 +4,27 @@ my @Primes = ();
 
 my $cur = 2;
 
-while (split('', $cur) < 11) {
+while (split('', $cur) <= 4) {
 
-    my $Prime = 1;
-
-    foreach (@Primes) {
-
-		if (($cur % $_) == 0) {
-		
-		$Prime = 0;
-		
-		}
-
-    }
-
-    if ($Prime == 1) {
-
-		push @Primes, $cur;
-
-    }
-    
-    $cur += 1;
+	my $Prime = 1;
+	
+	foreach (@Primes) {
+	
+	  	if (($cur % $_) == 0) {
+	
+			$Prime = 0;
+	
+	  	}
+	
+	}
+	
+	if ($Prime == 1) {
+	
+	  	push @Primes, $cur;
+	
+	}
+	
+	$cur += 1;
     
 }
 
@@ -40,13 +40,13 @@ sub SC {
 
 sub Check_Length {
 
-    my @Digits = @_;
-    
-    if (@Digits == 10) {
-        return 1;
-    }
-    
-    0;
+	my @Digits = @_;
+	
+	if (@Digits == 10) {
+		return 1;
+	}
+	
+	0;
 }
 
 
@@ -56,19 +56,21 @@ my %Factors;
 foreach $ts (@Primes) {
 
 	foreach $dz (@Primes) {
-
-	    $op = (($ts**2) + ($dz**3));
-	            
-	    if (SC($ts, $dz) == 10) {
-	        
+	
+	$op = (($ts**2) + ($dz**3));
+	
+	last if (split('', $op) > 10);
+	
+	if (SC($ts, $dz) == 10) {
+		
 		if (Check_Digits($op)) {
 			push @Finals, $op;
-	        $Factors{$op} = $ts . ", " . $dz;
-	      }
-	        
-	    }
-    
-  }
+			$Factors{$op} = $ts . ", " . $dz;
+		}
+		
+	}
+	
+	}
 
 }
 
@@ -76,7 +78,7 @@ foreach $ts (@Primes) {
 sub Check_Digits {
 
 	my @a;
-  
+	
 	foreach my $Digit (split('', $_[0])) {
 	
 	my $Contained = 0;
@@ -90,18 +92,19 @@ sub Check_Digits {
 	}
 	
 	if ($Contained == 0) {
-  		push @a, $Digit;
+		push @a, $Digit;
 	}
 	
 	}
 	
 	if (@a == 10) {
-	  	return 1;
+		return 1;
 	}
 	
 	0;
 }
 
+print "Candidates: " . (@Finals + 0) . "\n";
 foreach (@Finals) {
 	print "$_ | primes used: ";
 	print $Factors{$_};
