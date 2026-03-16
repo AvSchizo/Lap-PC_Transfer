@@ -1,6 +1,9 @@
 import random
 
-Suits = ['S', 'D', 'C', 'H']
+Suits = ('S', 'D', 'C', 'H')
+Ranks = ('filler', 'Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King')
+Poker_Hands = ('High Card', 'Pair', 'Two Pair', 'Three of a Kind', 'Straight', 'Flush', 'Full House', 'Four of a Kind', 'Straight Flush', 'Royal Flush', 'Five of a Kind')
+
 
 def Create_Deck():
 
@@ -18,15 +21,91 @@ def Shuffle(deck):
 	random.shuffle(deck)
 
 
-Deck = Create_Deck()
-Shuffle(Deck)
+def recycleDeck():
 
-Hand = []
+	tempDeck = Create_Deck()
+	Shuffle(tempDeck)
 
-for i in range(5):
-	Hand.append(Deck.pop(0))
+	return tempDeck
 
+Deck = recycleDeck()
+
+def newHand():
+
+	tempHand = []
+	for i in range(5):
+		tempHand.append(Deck.pop(0))
+
+	return tempHand
+
+Hand = newHand()
+
+
+def findAmount(item, list):
+
+	iterations = 0
+
+	for i in range(len(list)):
+
+		if list[i] == item:
+
+			iterations += 1
+	
+	return iterations
+
+def findValues(hand):
+
+	values = []
+
+	for i in range(len(hand)):
+
+		valueList = list(str(hand[i]))
+
+		if valueList[0] in Suits:
+			valueList.pop(0)
+
+		values.append(int(''.join(valueList)))
+	
+	return values
+
+
+# ofakind()
+def ofakind(hand):
+	
+	values = findValues(hand)
+
+	highest = 0
+	rank = 0
+
+	for i in range(len(values)):
+
+		if values[i] == rank:
+			continue
+
+		tempAmount = findAmount(values[i], values)
+
+		if tempAmount == 3 and highest == 2:
+			return 'fullhouse', values[i], rank
+		elif tempAmount == 2 and highest == 3:
+			return 'fullhouse', rank, values[i]
+		
+		if tempAmount == highest and tempAmount == 2:
+			return '2pair', values[i], rank
+		
+		elif tempAmount > highest:
+
+			highest = tempAmount
+			rank = values[i]
+		
+	return highest, rank
+
+
+
+# flush()
 def flush(hand):
+
+	values = findValues(hand)
+	values.sort(reverse=True)
 
 	Suit = list(hand[0])[0]
 
@@ -38,4 +117,100 @@ def flush(hand):
 		
 		i += 1
 	
-	return True
+	return True, values[0], values[1], values[2]
+
+# straight()
+def straight(hand):
+
+	values = findValues(hand)
+
+	values.sort()
+
+	if values[0] == 1:
+
+		if values[1] == 2 or values[1] == 10:
+
+			if values[4] == values[1] + 3:
+				return True, values[4]
+			else:
+				return False
+		
+		else:
+			return False
+	
+	else:
+
+		if values[4] == values[0] + 4:
+			return True, values[4]
+		else:
+			return False
+
+
+
+
+def getHandInfo(hand):
+
+	if ofakind(hand)[0] == 'fullhouse' or ofakind(hand)[0] == '2pair':
+
+		fullpair = ofakind(hand)
+		
+		if fullpair[0] == 'fullhouse':
+			return 6, fullpair[1], fullpair[2]
+		else:
+			return 2, fullpair[1], fullpair[2]
+
+	oak = ofakind(hand)[0]
+	if oak > 1:
+
+		oan = ofakind(hand)[1]
+
+		if oak == 2:
+			return 1, oan
+		elif oak == 3:
+			return 3, oan
+		elif oak == 4:
+			return 7, oan
+		elif oak == 5:
+			return 10, oan
+	
+
+	if flush(hand) == False:
+
+		if straight(hand) == False:
+			return 0, 0
+		else:
+			return 4, straight(hand)[1]
+	
+	else:
+
+		if straight(hand) == False:
+			return 5, flush(hand)[1], flush(hand)[2], flush(hand)[3]
+		
+		sh1 = straight(hand)[1]
+		if sh1 == 13:
+			return 9, sh1
+		else:
+			return 8, sh1
+
+
+# printPokerHand()
+def printPokerHand(hand):
+
+	handInfo = getHandInfo(hand)
+
+	print(Poker_Hands[handInfo[0]])
+
+
+
+for i in range(5):
+
+	print()
+
+	Deck = recycleDeck()
+	Hand = newHand()
+
+	print(Hand)
+	printPokerHand(Hand)
+	
+	print()
+
