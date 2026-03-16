@@ -177,7 +177,9 @@ def getHandInfo(hand):
 	if flush(hand) == False:
 
 		if straight(hand) == False:
-			return 0, 0
+			values = findValues(hand)
+			values.sort(reverse=True)
+			return 0, values[0]
 		else:
 			return 4, straight(hand)[1]
 	
@@ -196,21 +198,36 @@ def getHandInfo(hand):
 # printPokerHand()
 def printPokerHand(hand):
 
-	handInfo = getHandInfo(hand)
+	info = getHandInfo(hand)
+	result = info[0]
 
-	print(Poker_Hands[handInfo[0]])
+	if result == 0:
+		print("High Card of " + str(Ranks[info[1]]))
+
+	elif result == 1:
+		print("Pair of " + str(Ranks[info[1]]) + "s")
+	
+	elif result == 2 or result == 6:
+		print(str(Poker_Hands[result]) + '; ' + str(Ranks[info[1]]) + "s and " + str(Ranks[info[2]]) + "s")
+	
+	elif result == 3:
+		print("Three " + str(Ranks[info[1]]) + "s")
+	elif result == 7:
+		print("Four " + str(Ranks[info[1]]) + "s")
+	elif result == 10:
+		print("Five " + str(Ranks[info[1]]) + "s")
+
+	else:
+		print(Poker_Hands[result])
 
 
-
-for i in range(5):
-
-	print()
+print()
+for i in range(9):
 
 	Deck = recycleDeck()
 	Hand = newHand()
 
 	print(Hand)
 	printPokerHand(Hand)
-	
 	print()
 
