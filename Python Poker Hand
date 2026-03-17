@@ -38,6 +38,12 @@ def newHand():
 
 	return tempHand
 
+def newHandAlt(deck):
+	tempHand = []
+	for i in range(5):
+		tempHand.append(deck.pop(0))
+	return tempHand
+
 Hand = newHand()
 
 
@@ -221,13 +227,35 @@ def printPokerHand(hand):
 		print(Poker_Hands[result])
 
 
-print()
-for i in range(9):
+# comparePokerHand()
+def comparePokerHand(hand1, hand2):
 
-	Deck = recycleDeck()
-	Hand = newHand()
+	frstInfo = getHandInfo(hand1)
+	scndInfo = getHandInfo(hand2)
 
-	print(Hand)
-	printPokerHand(Hand)
-	print()
+	if frstInfo[0] > scndInfo[0]:
+		return 1
+	elif frstInfo[0] < scndInfo[0]:
+		return 2
+	
+	if frstInfo[1] > scndInfo[1]:
+		return 1
+	elif frstInfo[1] < scndInfo[1]:
+		return 2
+	
+	result = frstInfo[0]
+	if result == 5:
 
+		if frstInfo[2] > scndInfo[2]:
+			return 1
+		elif frstInfo[2] < scndInfo[2]:
+			return 2
+		
+		if frstInfo[3] > scndInfo[3]:
+			return 1
+		elif frstInfo[3] < scndInfo[3]:
+			return 2
+		
+		return 0
+	
+	return 0
