@@ -105,6 +105,18 @@ def ofakind(hand):
 		
 	return highest, rank
 
+def ofaSuit(cards):
+
+	highest = 0
+
+	for i in range(len(Suits)):
+
+		iterations = findAmount(Suits[i], cards)
+		if iterations > highest:
+			highest == iterations
+	
+	return highest
+
 
 
 # flush()
