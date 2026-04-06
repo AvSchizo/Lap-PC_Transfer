@@ -47,7 +47,7 @@ def Bet(money):
 				return bet
 		
 		elif bet == "quit":
-			return True
+			return "quit"
 		
 		else:
 			print("Sorry, I don't understand")
@@ -124,16 +124,12 @@ while True:
 	# round loop
 	while True:
 
-		if (p.money or dealer.money) < 1:
-			print("sorry, outta cash")
-			break
-
 		menu = False
 		winner = "none"
 		Deck = recycle()
 
 		bet = Bet(p.money)
-		if bet == True:
+		if bet == "quit":
 			break
 		winnings = bet
 
@@ -208,7 +204,10 @@ while True:
 
 			dealer.money += winnings
 			p.money -= winnings
-
+			
+			if p.money < 1:
+				print("sorry, outta cash")
+				p.money += 200
 			input("Press enter to continue")
 			print()
 			
@@ -258,5 +257,11 @@ while True:
 		elif winner == "tie":
 			print("tie")
 		
+		
+		print(p.money)
+		if p.money < 1:
+			print("sorry, outta cash")
 		input("Press enter to continue")
 		print()
+		
+		
