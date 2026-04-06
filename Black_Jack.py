@@ -99,24 +99,38 @@ class playerChar():
 
 Deck = newDeck()
 
-p = playerChar(50)
-dealer = playerChar(500)
+p = playerChar(200)
+dealer = playerChar(10000)
 
 
-# menu screen
+# making sure game loop goes into menu loop
 while True:
-	print()
-	print("menu")
-	print()
+	# menu loop
+	while True:
+		print()
+		print("MAIN MENU")
+		print()
+
+		menuChoice = input("(start)/(quit): ")
+
+		if menuChoice == "start":
+			print()
+			break
+		elif menuChoice == "quit":
+			quit()
+		else:
+			print("Sorry, I don't understand")
 
 	# round loop
 	while True:
 
+		if (p.money or dealer.money) < 1:
+			print("sorry, outta cash")
+			break
+
 		menu = False
-
-		Deck = recycle()
-
 		winner = "none"
+		Deck = recycle()
 
 		bet = Bet(p.money)
 		if bet == True:
@@ -243,9 +257,6 @@ while True:
 
 		elif winner == "tie":
 			print("tie")
-
-			p.money += bet
-			dealer.money += bet
 		
 		time.sleep(wst)
 		print()
