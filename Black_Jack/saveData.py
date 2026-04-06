@@ -11,12 +11,3 @@ def saveData(fileName, key, value):
 	with open(fileName, "w") as f:
 		json.dump(data, f)
 	
-	
-lD = loadData("data.json")
-print(lD["name"])
-lD["name"] = "fred"
-saveData("data.json", "name", lD["name"])
-
-print()
-print(lD["money"])
-print(lD["name"])
