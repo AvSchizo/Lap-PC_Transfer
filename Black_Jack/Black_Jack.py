@@ -3,10 +3,10 @@ import math
 import time
 
 # dealer wait time
-dWT = 2
+dWT = 1.5
 
 # win sleep time
-wst = 4
+bWT = 1.5
 
 Ranks = ('Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King')
 Tens = (10, 'Jack', 'Queen', 'King')
@@ -170,7 +170,7 @@ while True:
 			if p.total > 21:
 				winner = "dealer"
 				print("you bust")
-				time.sleep(dWT)
+				time.sleep(bWT)
 				break
 
 			p.choice = input("(hit)/(check): ")
@@ -198,7 +198,7 @@ while True:
 			p.money += winnings
 			dealer.money -= winnings
 
-			time.sleep(wst)
+			input("Press enter to continue")
 			print()
 
 			continue
@@ -209,7 +209,7 @@ while True:
 			dealer.money += winnings
 			p.money -= winnings
 
-			time.sleep(wst)
+			input("Press enter to continue")
 			print()
 			
 			continue
@@ -232,7 +232,7 @@ while True:
 			printCards(dealer)
 			if dealer.total > 21:
 				print("dealer busts")
-			time.sleep(dWT)
+			time.sleep(bWT)
 			print()
 		
 		if dealer.total > 21 or p.total > dealer.total:
@@ -258,5 +258,5 @@ while True:
 		elif winner == "tie":
 			print("tie")
 		
-		time.sleep(wst)
+		input("Press enter to continue")
 		print()
