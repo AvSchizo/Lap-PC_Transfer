@@ -8,6 +8,8 @@ dWT = 1.5
 # win sleep time
 bWT = 1.5
 
+debtMoney = 200
+
 Ranks = ('Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King')
 Tens = (10, 'Jack', 'Queen', 'King')
 
@@ -207,7 +209,7 @@ while True:
 			
 			if p.money < 1:
 				print("sorry, outta cash")
-				p.money += 200
+				p.money += debtMoney
 			input("Press enter to continue")
 			print()
 			
@@ -257,10 +259,9 @@ while True:
 		elif winner == "tie":
 			print("tie")
 		
-		
-		print(p.money)
 		if p.money < 1:
 			print("sorry, outta cash")
+			p.money += debtMoney
 		input("Press enter to continue")
 		print()
 		
