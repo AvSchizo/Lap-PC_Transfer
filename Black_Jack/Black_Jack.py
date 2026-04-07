@@ -11,6 +11,9 @@ dWT = 1.5
 # bust wait time
 bWT = 1.5
 
+# bust deal sleep time
+bdST = .75
+
 debtMoney = 200
 
 Ranks = ('Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King')
@@ -178,7 +181,7 @@ while True:
 			
 			
 			if p.total > 21:
-				time.sleep(dWT)
+				time.sleep(bdST)
 				winner = "dealer"
 				print("you bust")
 				time.sleep(bWT)
@@ -246,7 +249,7 @@ while True:
 			dealer.total = findTotal(dealer.hand)
 			printCards(dealer)
 			if dealer.total > 21:
-				time.sleep(dWT)
+				time.sleep(bdST)
 				print()
 				print("dealer busts")
 			time.sleep(bWT)
