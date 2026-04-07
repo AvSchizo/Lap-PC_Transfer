@@ -8,7 +8,7 @@ from Save_Data import saveData, loadData
 # dealer wait time
 dWT = 1.5
 
-# win sleep time
+# bust wait time
 bWT = 1.5
 
 debtMoney = 200
@@ -81,7 +81,6 @@ def findTotal(hand):
 
 
 def hit(hand, deck):
-	print(f"The dealer deals {deck[0]}")
 	hand.append(deck.pop(0))
 
 
@@ -91,9 +90,6 @@ def printCards(char):
 	else:
 		print(f"Player's cards: {char.hand}")
 	print(f"Total: {char.total}")
-
-
-
 
 
 class playerChar():
@@ -148,27 +144,41 @@ while True:
 		dealer.hidden = dealer.hand.pop(0)
 
 
-		print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
-		print()
-
 		# hit/check loop
 		while True:
+			
+			print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
+			print()
+			
+			p.total = findTotal(p.hand)
+			printCards(p)
 
 			if (p.hand[0] == 'Ace' and p.hand[1] in Tens) or (p.hand[1] == 'Ace' and p.hand[0] in Tens):
 				
-				print("blackjack")
-				winner = "p"
-				winnings = math.floor(bet*1.5)
+				if dealer.hand[0] == 'Ace':
+					while True:
+						evenMoney = input("even money? (y)/(n): ")
+						
+						if evenMoney == "y":
+							winnings = bet
+							winner = "p"
+							break
+						elif evenMoney == "n":
+							break
+						else:
+							print("sorry, I don't understand")
+				
+				else:
+					print("blackjack")
+					time.sleep(dWT)
+					winner = "p"
+					winnings = math.floor(bet*1.5)
 
 				break
-
-			p.total = findTotal(p.hand)
 			
-
-			print(f"Your cards: {p.hand}")
-			print(f"Total: {p.total}")
 			
 			if p.total > 21:
+				time.sleep(dWT)
 				winner = "dealer"
 				print("you bust")
 				time.sleep(bWT)
@@ -231,10 +241,13 @@ while True:
 
 		while dealer.total < 17:
 
+			print(f"The dealer deals a {Deck[0]}")
 			hit(dealer.hand, Deck)
 			dealer.total = findTotal(dealer.hand)
 			printCards(dealer)
 			if dealer.total > 21:
+				time.sleep(dWT)
+				print()
 				print("dealer busts")
 			time.sleep(bWT)
 			print()
