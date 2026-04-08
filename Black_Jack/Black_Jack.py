@@ -6,7 +6,7 @@ import time
 
 
 # True: "1" = first item in action list; False: disabled
-numberedActions = False
+numberedActions = True
 
 # dealer wait time
 dWT = 1.5
@@ -24,7 +24,10 @@ Tens = (10, 'Jack', 'Queen', 'King')
 
 def checkNumberedActions(choice, actions):
 	if numberedActions:
-		if 
+		if choice.isdigit():
+			choice = int(choice)
+			if choice > 0 and choice <= len(actions):
+				return True
 
 def newDeck():
 
@@ -167,7 +170,7 @@ while True:
 
 		if len(Shoe) < 20:
 			Shoe = newShoe(decksInShoe)
-			print(f"new {decksInShoe} deck shoe")
+			print(f"New {decksInShoe} deck shoe")
 			print()
 		Deck = Shoe
 
@@ -241,6 +244,9 @@ while True:
 			print()
 			print(f"Actions: {validActions}")
 			p.choice = input("Choice: ")
+
+			if checkNumberedActions(p.choice, validActions):
+				p.choice = validActions[int(p.choice) - 1]
 
 			if p.choice in validActions:
 				if p.choice == "quit":
