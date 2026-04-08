@@ -154,6 +154,7 @@ while True:
 
 		menu = False
 		winner = "none"
+		blCheck = 0
 
 		doubleDown = False
 
@@ -170,6 +171,8 @@ while True:
 
 		p.hand = []
 		dealer.hand = []
+
+		validActions = ["hit", "check", "double down"]
 		
 		for i in range(2):
 			p.hand.append(Deck.pop(0))
@@ -187,7 +190,12 @@ while True:
 			p.total = findTotal(p.hand)
 			printCards(p)
 
-			if (p.hand[0] == 'Ace' and p.hand[1] in Tens) or (p.hand[1] == 'Ace' and p.hand[0] in Tens):
+			if p.hand[0] == 'Ace' and p.hand[1] in Tens:
+				blCheck += 1
+			if p.hand[1] == 'Ace' and p.hand[0] in Tens:
+				blCheck += 1
+
+			if blCheck > 0:
 				
 				if dealer.hand[0] == 'Ace':
 					while True:
@@ -222,27 +230,34 @@ while True:
 				time.sleep(dWT)
 				break
 
-			print('"hit"')
-			print('"check"')
-			print('"double down"')
+
+			print()
+			print(f"Actions: {validActions}")
 			p.choice = input("Choice: ")
 
-			if p.choice == "quit":
-				menu = True
-				break
-			elif p.choice == "hit" or p.choice == "double down":
-				if p.choice == "double down":
-					doubleDown = True
-					winnings *= 2
-				hit(p.hand, Deck)
-			elif p.choice == "check":
-				break
+			if p.choice in validActions:
+				if p.choice == "quit":
+					menu = True
+					break
+				elif p.choice == "hit":
+					hit(p.hand, Deck)
+				elif p.choice == "double down":
+					if (p.money - winnings) >= winnings:
+						doubleDown = True
+						winnings *= 2
+						hit(p.hand, Deck)
+					else:
+						print("not enough money")
+				elif p.choice == "check":
+					break
+				else:
+					print("i dunno")
 			else:
-				print("i dunno")
+				print("not in actions")
 
 			print()
 		
-		if menu == True:
+		if menu:
 			break
 		print()
 
