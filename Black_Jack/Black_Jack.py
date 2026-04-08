@@ -230,6 +230,7 @@ while True:
 			if p.total > 21:
 				time.sleep(bdST)
 				winner = "dealer"
+				print()
 				print("you bust")
 				next()
 				break
@@ -273,6 +274,8 @@ while True:
 		print()
 
 
+		# player gets blackjack or busts
+
 		if winner == "p":
 			print("player win")
 
@@ -285,7 +288,6 @@ while True:
 			continue
 		
 		elif winner == "dealer":
-			print("dealer win")
 
 			dealer.money += winnings
 			p.money -= winnings
@@ -309,18 +311,19 @@ while True:
 		next()
 		print()
 
-		while dealer.total < 17:
+		if not doubleDown:
+			while dealer.total < 17:
 
-			print(f"The dealer deals a {Deck[0]}")
-			hit(dealer.hand, Deck)
-			dealer.total = findTotal(dealer.hand)
-			printCards(dealer)
-			if dealer.total > 21:
-				time.sleep(bdST)
+				print(f"The dealer deals a {Deck[0]}")
+				hit(dealer.hand, Deck)
+				dealer.total = findTotal(dealer.hand)
+				printCards(dealer)
+				if dealer.total > 21:
+					time.sleep(bdST)
+					print()
+					print("dealer busts")
+				next()
 				print()
-				print("dealer busts")
-			next()
-			print()
 		
 		if dealer.total > 21 or p.total > dealer.total:
 			winner = "p"
@@ -331,23 +334,28 @@ while True:
 		
 
 		if winner == "p":
-			print("player win")
+			if dealer.money < 22:
+				print("player win")
 
 			p.money += winnings
 			dealer.money -= winnings
 		
 		elif winner == "dealer":
-			print("dealer win")
+			if p.money < 22:
+				print("dealer win")
 
 			dealer.money += winnings
 			p.money -= winnings
 
 		elif winner == "tie":
-			print("tie")
+			if p.money < 22 and dealer.money < 22:
+				print("tie")
 		
 		if p.money < 1:
 			print("sorry, outta cash")
 			p.money += debtMoney
-		next()
+		
+		if p.money < 22 and dealer.money < 22:
+			next()
 		print()
 		
