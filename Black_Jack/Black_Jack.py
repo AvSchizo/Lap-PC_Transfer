@@ -180,7 +180,7 @@ while True:
 		p.hand = []
 		dealer.hand = []
 
-		validActions = ["hit", "check", "double down"]
+		validActions = ["hit", "stand", "double down"]
 		
 		for i in range(2):
 			p.hand.append(Deck.pop(0))
@@ -252,16 +252,19 @@ while True:
 				if p.choice == "quit":
 					menu = True
 					break
-				elif p.choice == "hit":
+				# hit
+				elif p.choice == validActions[0]:
 					hit(p.hand, Deck)
-				elif p.choice == "double down":
+				# double down
+				elif p.choice == validActions[2]:
 					if (p.money - winnings) >= winnings:
 						doubleDown = True
 						winnings *= 2
 						hit(p.hand, Deck)
 					else:
 						print("not enough money")
-				elif p.choice == "check":
+				# stand
+				elif p.choice == validActions[1]:
 					break
 				else:
 					print("i dunno")
@@ -306,19 +309,18 @@ while True:
 		next()
 		print()
 
-		if not doubleDown:
-			while dealer.total < 17:
+		while dealer.total < 17:
 
-				print(f"The dealer deals a {Deck[0]}")
-				hit(dealer.hand, Deck)
-				dealer.total = findTotal(dealer.hand)
-				printCards(dealer)
-				if dealer.total > 21:
-					time.sleep(bdST)
-					print()
-					print("dealer busts")
-				next()
+			print(f"The dealer deals a {Deck[0]}")
+			hit(dealer.hand, Deck)
+			dealer.total = findTotal(dealer.hand)
+			printCards(dealer)
+			if dealer.total > 21:
+				time.sleep(bdST)
 				print()
+				print("dealer busts")
+			next()
+			print()
 		
 		if dealer.total > 21 or p.total > dealer.total:
 			winner = "p"
