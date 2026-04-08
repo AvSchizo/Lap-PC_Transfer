@@ -334,28 +334,28 @@ while True:
 		
 
 		if winner == "p":
-			if dealer.money < 22:
+			if dealer.total < 22:
 				print("player win")
 
 			p.money += winnings
 			dealer.money -= winnings
 		
 		elif winner == "dealer":
-			if p.money < 22:
+			if p.total < 22:
 				print("dealer win")
 
 			dealer.money += winnings
 			p.money -= winnings
 
 		elif winner == "tie":
-			if p.money < 22 and dealer.money < 22:
+			if p.total < 22 and dealer.total < 22:
 				print("tie")
 		
 		if p.money < 1:
 			print("sorry, outta cash")
 			p.money += debtMoney
 		
-		if p.money < 22 and dealer.money < 22:
+		if p.total < 22 and dealer.total < 22:
 			next()
 			print()
 		
