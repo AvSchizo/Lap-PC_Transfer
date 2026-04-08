@@ -8,11 +8,6 @@ import time
 # True: "1" = first item in action list; False: disabled
 numberedActions = True
 
-# dealer wait time
-dWT = 1.5
-
-# bust wait time
-bWT = 1.5
 
 # bust deal sleep time
 bdST = .75
@@ -28,6 +23,9 @@ def checkNumberedActions(choice, actions):
 			choice = int(choice)
 			if choice > 0 and choice <= len(actions):
 				return True
+
+def next():
+	input("Press enter to continue")
 
 def newDeck():
 
@@ -124,7 +122,7 @@ class playerChar():
 		self.money = money
 
 
-decksInShoe = 5
+decksInShoe = 1
 Shoe = []
 Deck = Shoe
 
@@ -222,7 +220,7 @@ while True:
 				
 				else:
 					print("blackjack")
-					time.sleep(dWT)
+					next()
 					winner = "p"
 					winnings = math.floor(bet*1.5)
 
@@ -233,11 +231,11 @@ while True:
 				time.sleep(bdST)
 				winner = "dealer"
 				print("you bust")
-				time.sleep(bWT)
+				next()
 				break
 
 			if doubleDown:
-				time.sleep(dWT)
+				next()
 				break
 
 
@@ -281,7 +279,7 @@ while True:
 			p.money += winnings
 			dealer.money -= winnings
 
-			input("Press enter to continue")
+			next()
 			print()
 
 			continue
@@ -295,7 +293,7 @@ while True:
 			if p.money < 1:
 				print("sorry, outta cash")
 				p.money += debtMoney
-			input("Press enter to continue")
+			next()
 			print()
 			
 			continue
@@ -308,7 +306,7 @@ while True:
 
 		print("The dealer flips his hidden card")
 		printCards(dealer)
-		time.sleep(dWT)
+		next()
 		print()
 
 		while dealer.total < 17:
@@ -321,7 +319,7 @@ while True:
 				time.sleep(bdST)
 				print()
 				print("dealer busts")
-			time.sleep(bWT)
+			next()
 			print()
 		
 		if dealer.total > 21 or p.total > dealer.total:
@@ -350,6 +348,6 @@ while True:
 		if p.money < 1:
 			print("sorry, outta cash")
 			p.money += debtMoney
-		input("Press enter to continue")
+		next()
 		print()
 		
