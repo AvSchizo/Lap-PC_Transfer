@@ -282,9 +282,6 @@ while True:
 			p.money += winnings
 			dealer.money -= winnings
 
-			next()
-			print()
-
 			continue
 		
 		elif winner == "dealer":
