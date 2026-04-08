@@ -122,7 +122,7 @@ class playerChar():
 		self.money = money
 
 
-decksInShoe = 1
+decksInShoe = 5
 Shoe = []
 Deck = Shoe
 
