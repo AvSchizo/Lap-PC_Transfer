@@ -219,6 +219,7 @@ while True:
 							print("sorry, I don't understand")
 				
 				else:
+					print()
 					print("blackjack")
 					next()
 					winner = "p"
@@ -277,7 +278,6 @@ while True:
 		# player gets blackjack or busts
 
 		if winner == "p":
-			print("player win")
 
 			p.money += winnings
 			dealer.money -= winnings
@@ -357,5 +357,5 @@ while True:
 		
 		if p.money < 22 and dealer.money < 22:
 			next()
-		print()
+			print()
 		
