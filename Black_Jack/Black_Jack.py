@@ -2,7 +2,7 @@ import random
 import math
 import time
 
-from Save_Data import saveData, loadData
+# from Save_Data import saveData, loadData
 
 
 # dealer wait time
@@ -95,13 +95,29 @@ def printCards(char):
 	print(f"Total: {char.total}")
 
 
+def newShoe(decks):
+	tempShoe = []
+
+	for i in range(decks):
+
+		for i in range(4):
+			for i in range(13):
+				tempShoe.append(Ranks[i])
+
+	Shuffle(tempShoe)
+	return tempShoe
+
+
+
 class playerChar():
 	def __init__(self, money):
 		self.money = money
 
 
 
-Deck = newDeck()
+Shoe = newShoe(5)
+Deck = Shoe
+
 
 p = playerChar(200)
 dealer = playerChar(10000)
@@ -109,6 +125,7 @@ dealer = playerChar(10000)
 
 # making sure game loop goes into menu loop
 while True:
+
 	# menu loop
 	while True:
 		print()
@@ -122,6 +139,11 @@ while True:
 			break
 		elif menuChoice == "quit":
 			quit()
+		elif menuChoice == "uuddlrlrba":
+			if p.money < 1000:
+				p.money = 1000
+			print()
+			break
 		else:
 			print("Sorry, I don't understand")
 
@@ -130,7 +152,12 @@ while True:
 
 		menu = False
 		winner = "none"
-		Deck = recycle()
+
+		if len(Shoe) < 20:
+			Shoe = newShoe(5)
+			print("new shoe")
+			print()
+		Deck = Shoe
 
 		bet = Bet(p.money)
 		if bet == "quit":
@@ -283,5 +310,4 @@ while True:
 			p.money += debtMoney
 		input("Press enter to continue")
 		print()
-		
 		
