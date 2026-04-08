@@ -132,7 +132,9 @@ while True:
 		print("MAIN MENU")
 		print()
 
-		menuChoice = input("(start)/(quit): ")
+		print('"start"')
+		print('"quit"')
+		menuChoice = input("Choice: ")
 
 		if menuChoice == "start":
 			print()
@@ -152,6 +154,8 @@ while True:
 
 		menu = False
 		winner = "none"
+
+		doubleDown = False
 
 		if len(Shoe) < 20:
 			Shoe = newShoe(decksInShoe)
@@ -214,12 +218,22 @@ while True:
 				time.sleep(bWT)
 				break
 
-			p.choice = input("(hit)/(check): ")
+			if doubleDown:
+				time.sleep(dWT)
+				break
+
+			print('"hit"')
+			print('"check"')
+			print('"double down"')
+			p.choice = input("Choice: ")
 
 			if p.choice == "quit":
 				menu = True
 				break
-			elif p.choice == "hit":
+			elif p.choice == "hit" or p.choice == "double down":
+				if p.choice == "double down":
+					doubleDown = True
+					winnings *= 2
 				hit(p.hand, Deck)
 			elif p.choice == "check":
 				break
