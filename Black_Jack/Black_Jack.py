@@ -114,8 +114,8 @@ class playerChar():
 		self.money = money
 
 
-
-Shoe = newShoe(5)
+decksInShoe = 5
+Shoe = []
 Deck = Shoe
 
 
@@ -154,8 +154,8 @@ while True:
 		winner = "none"
 
 		if len(Shoe) < 20:
-			Shoe = newShoe(5)
-			print("new shoe")
+			Shoe = newShoe(decksInShoe)
+			print(f"new {decksInShoe} deck shoe")
 			print()
 		Deck = Shoe
 
