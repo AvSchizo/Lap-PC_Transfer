@@ -5,6 +5,9 @@ import time
 # from Save_Data import saveData, loadData
 
 
+# True: "1" = first item in action list; False: disabled
+numberedActions = False
+
 # dealer wait time
 dWT = 1.5
 
@@ -18,6 +21,10 @@ debtMoney = 200
 
 Ranks = ('Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King')
 Tens = (10, 'Jack', 'Queen', 'King')
+
+def checkNumberedActions(choice, actions):
+	if numberedActions:
+		if 
 
 def newDeck():
 
