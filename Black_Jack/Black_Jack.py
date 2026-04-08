@@ -295,8 +295,6 @@ while True:
 			if p.money < 1:
 				print("sorry, outta cash")
 				p.money += debtMoney
-			next()
-			print()
 			
 			continue
 
