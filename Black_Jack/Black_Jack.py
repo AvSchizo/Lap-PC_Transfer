@@ -136,18 +136,19 @@ while True:
 
 	# menu loop
 	while True:
+		validActions = ["start", "quit"]
+
 		print()
 		print("MAIN MENU")
 		print()
 
-		print('"start"')
-		print('"quit"')
+		print(f"Actions: {validActions}")
 		menuChoice = input("Choice: ")
 
-		if menuChoice == "start":
+		if menuChoice == validActions[0]:
 			print()
 			break
-		elif menuChoice == "quit":
+		elif menuChoice == validActions[1]:
 			quit()
 		elif menuChoice == "uuddlrlrba":
 			if p.money < 1000:
@@ -164,6 +165,8 @@ while True:
 		winner = "none"
 		blCheck = 0
 
+		# [0] = insurance amount; [1] = if asked for insurance
+		insurance = [0, 0, ""]
 		doubleDown = False
 
 		if len(Shoe) < 20:
@@ -241,6 +244,24 @@ while True:
 				break
 
 
+			if insurance[1] == 0 and dealer.hand[0] == 'Ace':
+
+				while True:
+						
+					insurance[2] = input("Would you like insurance? (y)/(n): ")
+
+					if insurance[2] == "y":
+						insurance[0] = math.ceil(bet/2)
+						break
+					elif insurance[2] == "n":
+						break
+					else:
+						print("I don't understand")
+						print()
+				
+				print()
+			insurance[1] = 1
+
 			print()
 			print(f"Actions: {validActions}")
 			p.choice = input("Choice: ")
@@ -278,8 +299,7 @@ while True:
 		print()
 
 
-		# player gets blackjack or busts
-
+		# blackjack
 		if winner == "p":
 
 			p.money += winnings
@@ -287,10 +307,12 @@ while True:
 
 			continue
 		
+		# bust
 		elif winner == "dealer":
 
-			dealer.money += winnings
-			p.money -= winnings
+			# if bust, still lose insurance -> insurance[0] here
+			dealer.money += winnings + insurance[0]
+			p.money -= winnings + insurance[0]
 			
 			if p.money < 1:
 				print("sorry, outta cash")
@@ -330,12 +352,16 @@ while True:
 			winner = "tie"
 		
 
+		# (dealer/p).total < 22 is so you don't have
+		# "player busts" and "dealer wins" back to back
+
 		if winner == "p":
 			if dealer.total < 22:
 				print("player win")
 
 			p.money += winnings
 			dealer.money -= winnings
+
 		
 		elif winner == "dealer":
 			if p.total < 22:
@@ -344,9 +370,18 @@ while True:
 			dealer.money += winnings
 			p.money -= winnings
 
+			if insurance[0] > 0 and dealer.hand[1] == 10:
+				p.money += insurance[0]
+				dealer.money -= insurance[0]
+
+
 		elif winner == "tie":
 			if p.total < 22 and dealer.total < 22:
 				print("tie")
+
+			if insurance[0] > 0 and dealer.hand[1] == 10:
+				p.money += insurance[0]
+				dealer.money -= insurance[0]
 		
 		if p.money < 1:
 			print("sorry, outta cash")
