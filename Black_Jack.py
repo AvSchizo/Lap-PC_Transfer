@@ -155,7 +155,7 @@ while True:
 		validActions = ["start", "quit"]
 
 		print()
-		print("MAIN MENU")
+		print("BLACKJACK")
 		print()
 
 		print(f"Actions: {validActions}")
@@ -178,10 +178,10 @@ while True:
 	while True:
 
 		menu = False
-		winner = "none"
+		stillToPlay = False
 		blCheck = 0
 
-		# [0] = insurance amount; [1] = if asked for insurance
+		# [0] = insurance amount; [1] = if asked for insurance; [2] = player answer
 		insurance = [0, 0, ""]
 		doubleDown = False
 
@@ -218,6 +218,7 @@ while True:
 			p.pile = handContainer[handIteration]
 			p.hand = handContainer[handIteration].cards
 			p.total = handContainer[handIteration].total
+			p.winner = handContainer[handIteration].winner
 
 			# hit/stand loop
 			while True:
@@ -225,7 +226,7 @@ while True:
 				print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
 				print()
 				
-				p.total = findTotal(p.hand)
+				p.pile.total = findTotal(p.hand)
 				printCards(p)
 
 				if p.hand[0] == 'Ace' and p.hand[1] in Tens:
@@ -240,8 +241,8 @@ while True:
 							evenMoney = input("even money? (y)/(n): ")
 							
 							if evenMoney == "y":
-								winnings = bet
-								winner = "p"
+								p.pile.winnings = bet
+								p.winner == "p"
 								break
 							elif evenMoney == "n":
 								break
@@ -252,15 +253,15 @@ while True:
 						print()
 						print("blackjack")
 						next()
-						winner = "p"
-						winnings = math.floor(bet*1.5)
+						p.winner = "p"
+						p.pile.winnings = math.floor(bet*1.5)
 
 					break
 				
 				
 				if p.total > 21:
 					time.sleep(bdST)
-					winner = "dealer"
+					p.winner = "dealer"
 					print()
 					print("you bust")
 					next()
@@ -286,8 +287,9 @@ while True:
 							print("I don't understand")
 							print()
 					
+					insurance[1] = 1
 					print()
-				insurance[1] = 1
+					continue
 
 				print()
 				print(f"Actions: {validActions}")
@@ -333,26 +335,39 @@ while True:
 		print()
 
 
-		# blackjack
-		if winner == "p":
+		for i in range(len(handContainer)):
 
-			p.money += winnings
-			dealer.money -= winnings
-
-			continue
+			# blackjack
+			if handContainer[i].winner == "p":
+				pass
+			elif handContainer[i].winner == "dealer":
+				pass
+			else:
+				stillToPlay = True
 		
-		# bust
-		elif winner == "dealer":
 
-			# if bust, still lose insurance -> insurance[0] here
-			dealer.money += winnings + insurance[0]
-			p.money -= winnings + insurance[0]
+		if not stillToPlay:
+			for i in range(len(handContainer)):
+
+				# blackjack
+				if handContainer[i].winner == "p":
+
+					p.money += winnings
+					dealer.money -= winnings
+
+				
+				# bust
+				elif handContainer[i].winner == "dealer":
+
+					# if bust, still lose insurance -> insurance[0] here
+					dealer.money += winnings + insurance[0]
+					p.money -= winnings + insurance[0]
+					
+					if p.money < 1:
+						print("sorry, outta cash")
+						p.money += debtMoney
 			
-			if p.money < 1:
-				print("sorry, outta cash")
-				p.money += debtMoney
-			
-			continue
+			break
 
 
 		# dealer
