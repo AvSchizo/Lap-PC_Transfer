@@ -13,6 +13,7 @@ numberedActions = True
 bdST = .75
 
 debtMoney = 200
+minBet = 10
 
 Ranks = ('Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King')
 Tens = (10, 'Jack', 'Queen', 'King')
@@ -98,9 +99,10 @@ def hit(hand, deck):
 def printCards(char):
 	if char == dealer:
 		print(f"Dealer's cards: {char.hand}")
+		print(f"Total: {char.total}")
 	else:
-		print(f"Player's cards: {char.hand}")
-	print(f"Total: {char.total}")
+		print(f"Player's cards: {char.pile.cards}")
+		print(f"Total: {char.pile.total}")
 
 
 def newShoe(decks):
@@ -117,9 +119,22 @@ def newShoe(decks):
 
 
 
-class playerChar():
+class charClass():
 	def __init__(self, money):
 		self.money = money
+
+class handClass():
+	def __init__(self, list):
+		self.id = len(list)
+
+		if self.id > 0:
+			self.cards = [list[self.id - 1]]
+		else:
+			self.cards = []
+	
+			
+	total = 0
+	winner = "none"
 
 
 decksInShoe = 5
@@ -127,8 +142,9 @@ Shoe = []
 Deck = Shoe
 
 
-p = playerChar(200)
-dealer = playerChar(10000)
+p = charClass(200)
+dealer = charClass(10000)
+
 
 
 # making sure game loop goes into menu loop
@@ -180,119 +196,137 @@ while True:
 			break
 		winnings = bet
 
-		p.hand = []
+		# list containing first empty hand
+		handContainer = [handClass([])]
+		p.pile = handContainer[0]
+
 		dealer.hand = []
+
 
 		validActions = ["hit", "stand", "double down"]
 		
 		for i in range(2):
-			p.hand.append(Deck.pop(0))
+			p.pile.cards.append(Deck.pop(0))
 			dealer.hand.append(Deck.pop(0))
 		
 		dealer.hidden = dealer.hand.pop(0)
 
 
-		# hit/check loop
+		handIteration = 0
+		# handContainer loop
 		while True:
-			
-			print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
-			print()
-			
-			p.total = findTotal(p.hand)
-			printCards(p)
+			p.pile = handContainer[handIteration]
+			p.hand = handContainer[handIteration].cards
+			p.total = handContainer[handIteration].total
 
-			if p.hand[0] == 'Ace' and p.hand[1] in Tens:
-				blCheck += 1
-			if p.hand[1] == 'Ace' and p.hand[0] in Tens:
-				blCheck += 1
-
-			if blCheck > 0:
+			# hit/stand loop
+			while True:
 				
-				if dealer.hand[0] == 'Ace':
+				print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
+				print()
+				
+				p.total = findTotal(p.hand)
+				printCards(p)
+
+				if p.hand[0] == 'Ace' and p.hand[1] in Tens:
+					blCheck += 1
+				if p.hand[1] == 'Ace' and p.hand[0] in Tens:
+					blCheck += 1
+
+				if blCheck > 0:
+					
+					if dealer.hand[0] == 'Ace':
+						while True:
+							evenMoney = input("even money? (y)/(n): ")
+							
+							if evenMoney == "y":
+								winnings = bet
+								winner = "p"
+								break
+							elif evenMoney == "n":
+								break
+							else:
+								print("sorry, I don't understand")
+					
+					else:
+						print()
+						print("blackjack")
+						next()
+						winner = "p"
+						winnings = math.floor(bet*1.5)
+
+					break
+				
+				
+				if p.total > 21:
+					time.sleep(bdST)
+					winner = "dealer"
+					print()
+					print("you bust")
+					next()
+					break
+
+				if doubleDown:
+					next()
+					break
+
+
+				if insurance[1] == 0 and dealer.hand[0] == 'Ace':
+
 					while True:
-						evenMoney = input("even money? (y)/(n): ")
-						
-						if evenMoney == "y":
-							winnings = bet
-							winner = "p"
+							
+						insurance[2] = input("Would you like insurance? (y)/(n): ")
+
+						if insurance[2] == "y":
+							insurance[0] = math.ceil(bet/2)
 							break
-						elif evenMoney == "n":
+						elif insurance[2] == "n":
 							break
 						else:
-							print("sorry, I don't understand")
-				
-				else:
+							print("I don't understand")
+							print()
+					
 					print()
-					print("blackjack")
-					next()
-					winner = "p"
-					winnings = math.floor(bet*1.5)
+				insurance[1] = 1
 
-				break
-			
-			
-			if p.total > 21:
-				time.sleep(bdST)
-				winner = "dealer"
 				print()
-				print("you bust")
-				next()
-				break
+				print(f"Actions: {validActions}")
+				p.choice = input("Choice: ")
 
-			if doubleDown:
-				next()
-				break
+				if checkNumberedActions(p.choice, validActions):
+					p.choice = validActions[int(p.choice) - 1]
 
-
-			if insurance[1] == 0 and dealer.hand[0] == 'Ace':
-
-				while True:
-						
-					insurance[2] = input("Would you like insurance? (y)/(n): ")
-
-					if insurance[2] == "y":
-						insurance[0] = math.ceil(bet/2)
+				if p.choice in validActions:
+					if p.choice == "quit":
+						menu = True
 						break
-					elif insurance[2] == "n":
-						break
-					else:
-						print("I don't understand")
-						print()
-				
-				print()
-			insurance[1] = 1
-
-			print()
-			print(f"Actions: {validActions}")
-			p.choice = input("Choice: ")
-
-			if checkNumberedActions(p.choice, validActions):
-				p.choice = validActions[int(p.choice) - 1]
-
-			if p.choice in validActions:
-				if p.choice == "quit":
-					menu = True
-					break
-				# hit
-				elif p.choice == validActions[0]:
-					hit(p.hand, Deck)
-				# double down
-				elif p.choice == validActions[2]:
-					if (p.money - winnings) >= winnings:
-						doubleDown = True
-						winnings *= 2
+					# hit
+					elif p.choice == validActions[0]:
 						hit(p.hand, Deck)
+					# double down
+					elif p.choice == validActions[2]:
+						if (p.money - winnings) >= winnings:
+							doubleDown = True
+							winnings *= 2
+							hit(p.hand, Deck)
+						else:
+							print("not enough money")
+					# stand
+					elif p.choice == validActions[1]:
+						break
 					else:
-						print("not enough money")
-				# stand
-				elif p.choice == validActions[1]:
-					break
+						print("i dunno")
 				else:
-					print("i dunno")
-			else:
-				print("not in actions")
+					print("not in actions")
 
-			print()
+				print()
+
+			if handContainer[handIteration].id == handContainer[-1].id:
+				break
+			elif menu:
+				break
+			else:
+				handIteration += 1
 		
 		if menu:
 			break
