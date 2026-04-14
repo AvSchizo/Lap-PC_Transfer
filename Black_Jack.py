@@ -128,13 +128,14 @@ class handClass():
 		self.id = len(list)
 
 		if self.id > 0:
-			self.cards = [list[self.id - 1]]
+			self.cards = [list[self.id - 1].cards.pop(0)]
 		else:
 			self.cards = []
 	
 			
 	total = 0
 	winner = "none"
+	blCheck = 0
 
 
 decksInShoe = 5
@@ -179,7 +180,6 @@ while True:
 
 		menu = False
 		stillToPlay = False
-		blCheck = 0
 
 		# [0] = insurance amount; [1] = if asked for insurance; [2] = player answer
 		insurance = [0, 0, ""]
@@ -212,6 +212,7 @@ while True:
 		dealer.hidden = dealer.hand.pop(0)
 
 
+		handContainer.append(handClass(handContainer))
 		handIteration = 0
 		# handContainer loop
 		while True:
@@ -219,6 +220,11 @@ while True:
 			p.hand = handContainer[handIteration].cards
 			p.total = handContainer[handIteration].total
 			p.winner = handContainer[handIteration].winner
+
+			p.pile.blCheck = 0
+
+			if len(handContainer) > 1:
+				print(f"Pile {handIteration + 1}")
 
 			# hit/stand loop
 			while True:
@@ -229,12 +235,13 @@ while True:
 				p.pile.total = findTotal(p.hand)
 				printCards(p)
 
-				if p.hand[0] == 'Ace' and p.hand[1] in Tens:
-					blCheck += 1
-				if p.hand[1] == 'Ace' and p.hand[0] in Tens:
-					blCheck += 1
+				if len(p.hand) > 1:
+					if p.hand[0] == 'Ace' and p.hand[1] in Tens:
+						p.pile.blCheck += 1
+					if p.hand[1] == 'Ace' and p.hand[0] in Tens:
+						p.pile.blCheck += 1
 
-				if blCheck > 0:
+				if p.pile.blCheck > 0:
 					
 					if dealer.hand[0] == 'Ace':
 						while True:
@@ -395,12 +402,15 @@ while True:
 
 		for i in range(len(handContainer)):
 
-			if dealer.total > 21 or handContainer[handIteration].total > dealer.total:
-				handContainer[handIteration].winner = "p"
-			elif dealer.total > handContainer[handIteration].total:
-				handContainer[handIteration].winner = "dealer"
+			if dealer.total > 21 or handContainer[i].total > dealer.total:
+				if handContainer[i].total < 22:
+					handContainer[i].winner = "p"
+				else:
+					handContainer[i].winner = "dealer"
+			elif dealer.total > handContainer[i].total:
+				handContainer[i].winner = "dealer"
 			else:
-				handContainer[handIteration].winner = "tie"
+				handContainer[i].winner = "tie"
 		
 
 		# (dealer/p).total < 22 is so you don't have
@@ -408,16 +418,25 @@ while True:
 
 		for i in range(len(handContainer)):
 
-			if handContainer[handIteration].winner == "p":
-				if dealer.total < 22:
+			if len(handContainer) > 1:
+				print(f"For pile {i + 1}:")
+
+			if handContainer[i].winner == "p":
+
+				if len(handContainer) > 1:
+					print("player win")
+				elif dealer.total < 22:
 					print("player win")
 
 				p.money += winnings
 				dealer.money -= winnings
 
 			
-			elif handContainer[handIteration].winner == "dealer":
-				if handContainer[handIteration].total < 22:
+			elif handContainer[i].winner == "dealer":
+
+				if len(handContainer) > 1:
+					print("dealer win")
+				elif handContainer[i].total < 22:
 					print("dealer win")
 
 				dealer.money += winnings
@@ -428,8 +447,11 @@ while True:
 					dealer.money -= insurance[0]
 
 
-			elif handContainer[handIteration].winner == "tie":
-				if handContainer[handIteration].total < 22 and dealer.total < 22:
+			elif handContainer[i].winner == "tie":
+
+				if len(handContainer) > 1:
+					print("dealer win")
+				elif handContainer[i].total < 22 and dealer.total < 22:
 					print("tie")
 
 				if insurance[0] > 0 and dealer.hand[1] == 10:
@@ -440,7 +462,11 @@ while True:
 				print("sorry, outta cash")
 				p.money += debtMoney
 			
-			if handContainer[handIteration].total < 22 and dealer.total < 22:
+
+			if len(handContainer) > 1:
+				next()
+				print()
+			elif handContainer[i].total < 22 and dealer.total < 22:
 				next()
 				print()
 		
