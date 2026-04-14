@@ -212,7 +212,7 @@ while True:
 		dealer.hidden = dealer.hand.pop(0)
 
 
-		handContainer.append(handClass(handContainer))
+		# handContainer.append(handClass(handContainer))
 		handIteration = 0
 		# handContainer loop
 		while True:
