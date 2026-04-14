@@ -242,7 +242,7 @@ while True:
 							
 							if evenMoney == "y":
 								p.pile.winnings = bet
-								p.winner == "p"
+								p.pile.winner == "p"
 								break
 							elif evenMoney == "n":
 								break
@@ -253,15 +253,15 @@ while True:
 						print()
 						print("blackjack")
 						next()
-						p.winner = "p"
+						p.pile.winner = "p"
 						p.pile.winnings = math.floor(bet*1.5)
 
 					break
 				
 				
-				if p.total > 21:
+				if p.pile.total > 21:
 					time.sleep(bdST)
-					p.winner = "dealer"
+					p.pile.winner = "dealer"
 					print()
 					print("you bust")
 					next()
@@ -337,7 +337,6 @@ while True:
 
 		for i in range(len(handContainer)):
 
-			# blackjack
 			if handContainer[i].winner == "p":
 				pass
 			elif handContainer[i].winner == "dealer":
@@ -367,7 +366,7 @@ while True:
 						print("sorry, outta cash")
 						p.money += debtMoney
 			
-			break
+			continue
 
 
 		# dealer
@@ -393,50 +392,55 @@ while True:
 			next()
 			print()
 		
-		if dealer.total > 21 or p.total > dealer.total:
-			winner = "p"
-		elif dealer.total > p.total:
-			winner = "dealer"
-		else:
-			winner = "tie"
+
+		for i in range(len(handContainer)):
+
+			if dealer.total > 21 or handContainer[handIteration].total > dealer.total:
+				handContainer[handIteration].winner = "p"
+			elif dealer.total > handContainer[handIteration].total:
+				handContainer[handIteration].winner = "dealer"
+			else:
+				handContainer[handIteration].winner = "tie"
 		
 
 		# (dealer/p).total < 22 is so you don't have
 		# "player busts" and "dealer wins" back to back
 
-		if winner == "p":
-			if dealer.total < 22:
-				print("player win")
+		for i in range(len(handContainer)):
 
-			p.money += winnings
-			dealer.money -= winnings
+			if handContainer[handIteration].winner == "p":
+				if dealer.total < 22:
+					print("player win")
 
-		
-		elif winner == "dealer":
-			if p.total < 22:
-				print("dealer win")
+				p.money += winnings
+				dealer.money -= winnings
 
-			dealer.money += winnings
-			p.money -= winnings
+			
+			elif handContainer[handIteration].winner == "dealer":
+				if handContainer[handIteration].total < 22:
+					print("dealer win")
 
-			if insurance[0] > 0 and dealer.hand[1] == 10:
-				p.money += insurance[0]
-				dealer.money -= insurance[0]
+				dealer.money += winnings
+				p.money -= winnings
+
+				if insurance[0] > 0 and dealer.hand[1] == 10:
+					p.money += insurance[0]
+					dealer.money -= insurance[0]
 
 
-		elif winner == "tie":
-			if p.total < 22 and dealer.total < 22:
-				print("tie")
+			elif handContainer[handIteration].winner == "tie":
+				if handContainer[handIteration].total < 22 and dealer.total < 22:
+					print("tie")
 
-			if insurance[0] > 0 and dealer.hand[1] == 10:
-				p.money += insurance[0]
-				dealer.money -= insurance[0]
-		
-		if p.money < 1:
-			print("sorry, outta cash")
-			p.money += debtMoney
-		
-		if p.total < 22 and dealer.total < 22:
-			next()
-			print()
+				if insurance[0] > 0 and dealer.hand[1] == 10:
+					p.money += insurance[0]
+					dealer.money -= insurance[0]
+			
+			if p.money < 1:
+				print("sorry, outta cash")
+				p.money += debtMoney
+			
+			if handContainer[handIteration].total < 22 and dealer.total < 22:
+				next()
+				print()
 		
