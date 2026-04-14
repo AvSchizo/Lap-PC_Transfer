@@ -26,7 +26,7 @@ def checkNumberedActions(choice, actions):
 				return True
 
 def next():
-	input("Press enter to continue")
+	input("Press ENTER to continue")
 
 def newDeck():
 
