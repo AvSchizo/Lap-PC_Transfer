@@ -9,6 +9,16 @@ import time
 numberedActions = True
 
 
+startChoiceKey = "start"
+quitChoiceKey = "quit"
+konamiChoiceKey = "uuddlrlrba"
+
+dDChoiceKey = "double down"
+hitChoiceKey = "hit"
+standChoiceKey = "stand"
+splitChoiceKey = "split"
+
+
 # bust deal sleep time
 bdST = .75
 
@@ -118,6 +128,12 @@ def newShoe(decks):
 	return tempShoe
 
 
+def findIndex(item, list):
+	for i in range(len(list)):
+		if list[i] == item:
+			return i
+
+
 
 class charClass():
 	def __init__(self, money):
@@ -153,7 +169,7 @@ while True:
 
 	# menu loop
 	while True:
-		validActions = ["start", "quit"]
+		validActions = [startChoiceKey, quitChoiceKey]
 
 		print()
 		print("BLACKJACK")
@@ -162,12 +178,12 @@ while True:
 		print(f"Actions: {validActions}")
 		menuChoice = input("Choice: ")
 
-		if menuChoice == validActions[0]:
+		if menuChoice == startChoiceKey:
 			print()
 			break
-		elif menuChoice == validActions[1]:
+		elif menuChoice == quitChoiceKey:
 			quit()
-		elif menuChoice == "uuddlrlrba":
+		elif menuChoice == konamiChoiceKey:
 			if p.money < 1000:
 				p.money = 1000
 			print()
@@ -203,7 +219,7 @@ while True:
 		dealer.hand = []
 
 
-		validActions = ["hit", "stand", "double down"]
+		validActions = [hitChoiceKey, standChoiceKey, dDChoiceKey]
 		
 		for i in range(2):
 			p.pile.cards.append(Deck.pop(0))
@@ -222,13 +238,31 @@ while True:
 			p.winner = handContainer[handIteration].winner
 
 			p.pile.blCheck = 0
+			doubleDown = False
 
 			if len(handContainer) > 1:
 				print(f"Pile {handIteration + 1}")
 
 			# hit/stand loop
 			while True:
+
+				# reset split in actions
+				if splitChoiceKey in validActions:
+					validActions.pop(findIndex(splitChoiceKey, validActions))
+
+				if len(p.hand) == 2:
+					if p.hand[0] == p.hand[1] and p.money >= 2*bet:
+						validActions.append(splitChoiceKey)
 				
+
+				# reset double down in actions
+				if dDChoiceKey in validActions:
+					validActions.pop(findIndex(dDChoiceKey, validActions))
+				
+				if p.money >= 2*bet:
+					validActions.append((dDChoiceKey))
+
+
 				print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
 				print()
 				
@@ -306,14 +340,15 @@ while True:
 					p.choice = validActions[int(p.choice) - 1]
 
 				if p.choice in validActions:
-					if p.choice == "quit":
+					# quit
+					if p.choice == quitChoiceKey:
 						menu = True
 						break
 					# hit
-					elif p.choice == validActions[0]:
+					elif p.choice == hitChoiceKey:
 						hit(p.hand, Deck)
 					# double down
-					elif p.choice == validActions[2]:
+					elif p.choice == dDChoiceKey:
 						if (p.money - winnings) >= winnings:
 							doubleDown = True
 							winnings *= 2
@@ -321,8 +356,11 @@ while True:
 						else:
 							print("not enough money")
 					# stand
-					elif p.choice == validActions[1]:
+					elif p.choice == standChoiceKey:
 						break
+					# split
+					elif p.choice == splitChoiceKey:
+						handContainer.append(handClass(handContainer))
 					else:
 						print("i dunno")
 				else:
@@ -352,27 +390,27 @@ while True:
 				stillToPlay = True
 		
 
-		if not stillToPlay:
-			for i in range(len(handContainer)):
+		for i in range(len(handContainer)):
 
-				# blackjack
-				if handContainer[i].winner == "p":
+			# blackjack
+			if handContainer[i].winner == "p":
 
-					p.money += winnings
-					dealer.money -= winnings
+				p.money += handContainer[i].winnings
+				dealer.money -= handContainer[i].winnings
 
-				
-				# bust
-				elif handContainer[i].winner == "dealer":
-
-					# if bust, still lose insurance -> insurance[0] here
-					dealer.money += winnings + insurance[0]
-					p.money -= winnings + insurance[0]
-					
-					if p.money < 1:
-						print("sorry, outta cash")
-						p.money += debtMoney
 			
+			# bust
+			elif handContainer[i].winner == "dealer":
+
+				# if bust, still lose insurance -> insurance[0] here
+				dealer.money += bet + insurance[0]
+				p.money -= bet + insurance[0]
+				
+				if p.money < 1:
+					print("sorry, outta cash")
+					p.money += debtMoney
+		
+		if not stillToPlay:			
 			continue
 
 
@@ -418,6 +456,10 @@ while True:
 
 		for i in range(len(handContainer)):
 
+			if handContainer[i].total > 21 or handContainer[i].blCheck > 0:
+				continue
+
+
 			if len(handContainer) > 1:
 				print(f"For pile {i + 1}:")
 
@@ -428,8 +470,8 @@ while True:
 				elif dealer.total < 22:
 					print("player win")
 
-				p.money += winnings
-				dealer.money -= winnings
+				p.money += bet
+				dealer.money -= bet
 
 			
 			elif handContainer[i].winner == "dealer":
@@ -439,8 +481,8 @@ while True:
 				elif handContainer[i].total < 22:
 					print("dealer win")
 
-				dealer.money += winnings
-				p.money -= winnings
+				dealer.money += bet
+				p.money -= bet
 
 				if insurance[0] > 0 and dealer.hand[1] == 10:
 					p.money += insurance[0]
