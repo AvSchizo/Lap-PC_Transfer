@@ -237,6 +237,7 @@ while True:
 			p.winner = handContainer[handIteration].winner
 
 			p.pile.blCheck = 0
+			p.pile.noEvenMoney = False
 			doubleDown = False
 
 			# hit/stand loop
@@ -285,6 +286,7 @@ while True:
 								p.pile.winner == "p"
 								break
 							elif evenMoney == "n":
+								p.pile.noEvenMoney = True
 								break
 							else:
 								print("sorry, I don't understand")
@@ -391,7 +393,7 @@ while True:
 
 		for i in range(len(handContainer)):
 
-			# blackjack
+			# blackjack and no dealer ace
 			if handContainer[i].winner == "p":
 
 				p.money += handContainer[i].winnings
@@ -469,8 +471,12 @@ while True:
 				elif dealer.total < 22:
 					print("player win")
 
-				p.money += bet
-				dealer.money -= bet
+				if handContainer[i].noEvenMoney:
+					p.money += handContainer[i].winnings
+					dealer.money -= handContainer[i].winnings
+				else:
+					p.money += bet
+					dealer.money -= bet
 
 			
 			elif handContainer[i].winner == "dealer":
