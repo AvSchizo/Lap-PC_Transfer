@@ -163,7 +163,6 @@ p = charClass(200)
 dealer = charClass(10000)
 
 
-
 # making sure game loop goes into menu loop
 while True:
 
@@ -240,11 +239,11 @@ while True:
 			p.pile.blCheck = 0
 			doubleDown = False
 
-			if len(handContainer) > 1:
-				print(f"Pile {handIteration + 1}")
-
 			# hit/stand loop
 			while True:
+
+				if len(handContainer) > 1:
+					print(f"Pile {handIteration + 1}")
 
 				# reset split in actions
 				if splitChoiceKey in validActions:
@@ -511,4 +510,3 @@ while True:
 			elif handContainer[i].total < 22 and dealer.total < 22:
 				next()
 				print()
-		
