@@ -355,7 +355,6 @@ while True:
 						if (p.money - p.pile.winnings) >= p.pile.winnings:
 							p.pile.doubleDown = True
 							p.pile.winnings *= 2
-							print(p.pile.winnings)
 							hit(p.hand, Deck)
 						else:
 							print("not enough money")
