@@ -51,7 +51,7 @@ def newDeck():
 
 
 def Shuffle(deck):
-	deck = random.shuffle(deck)
+	random.shuffle(deck)
 
 def recycle():
 	deck = newDeck()
