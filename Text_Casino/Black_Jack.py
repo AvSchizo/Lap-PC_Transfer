@@ -198,7 +198,6 @@ while True:
 
 		# [0] = insurance amount; [1] = if asked for insurance; [2] = player answer
 		insurance = [0, 0, ""]
-		doubleDown = False
 
 		if len(Shoe) < 20:
 			Shoe = newShoe(decksInShoe)
@@ -209,7 +208,6 @@ while True:
 		bet = Bet(p.money)
 		if bet == "quit":
 			break
-		winnings = bet
 
 		# list containing first empty hand
 		handContainer = [handClass([])]
@@ -238,7 +236,9 @@ while True:
 
 			p.pile.blCheck = 0
 			p.pile.noEvenMoney = False
-			doubleDown = False
+			p.pile.doubleDown = False
+			p.pile.notPastCard = True
+			p.pile.winnings = bet
 
 			# hit/stand loop
 			while True:
@@ -259,8 +259,9 @@ while True:
 				if dDChoiceKey in validActions:
 					validActions.pop(findIndex(dDChoiceKey, validActions))
 				
-				if p.money >= 2*bet:
+				if p.money >= 2*bet and p.pile.notPastCard:
 					validActions.append((dDChoiceKey))
+				p.pile.notPastCard = False
 
 
 				print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
@@ -309,7 +310,7 @@ while True:
 					next()
 					break
 
-				if doubleDown:
+				if p.pile.doubleDown:
 					next()
 					break
 
@@ -350,9 +351,9 @@ while True:
 						hit(p.hand, Deck)
 					# double down
 					elif p.choice == dDChoiceKey:
-						if (p.money - winnings) >= winnings:
-							doubleDown = True
-							winnings *= 2
+						if (p.money - p.pile.winnings) >= p.pile.winnings:
+							p.pile.doubleDown = True
+							p.pile.winnings *= 2
 							hit(p.hand, Deck)
 						else:
 							print("not enough money")
@@ -404,8 +405,8 @@ while True:
 			elif handContainer[i].winner == "dealer":
 
 				# if bust, still lose insurance -> insurance[0] here
-				dealer.money += bet + insurance[0]
-				p.money -= bet + insurance[0]
+				dealer.money += handContainer[i].winnings + insurance[0]
+				p.money -= handContainer[i].winnings + insurance[0]
 				
 				if p.money < 1:
 					print("sorry, outta cash")
@@ -471,12 +472,8 @@ while True:
 				elif dealer.total < 22:
 					print("player win")
 
-				if handContainer[i].noEvenMoney:
-					p.money += handContainer[i].winnings
-					dealer.money -= handContainer[i].winnings
-				else:
-					p.money += bet
-					dealer.money -= bet
+				p.money += handContainer[i].winnings
+				dealer.money -= handContainer[i].winnings
 
 			
 			elif handContainer[i].winner == "dealer":
@@ -486,8 +483,8 @@ while True:
 				elif handContainer[i].total < 22:
 					print("dealer win")
 
-				dealer.money += bet
-				p.money -= bet
+				dealer.money += handContainer[i].winnings
+				p.money -= handContainer[i].winnings
 
 				if insurance[0] > 0 and dealer.hand[1] == 10:
 					p.money += insurance[0]
