@@ -261,7 +261,8 @@ while True:
 				
 				if p.money >= 2*bet and p.pile.notPastCard:
 					validActions.append((dDChoiceKey))
-				p.pile.notPastCard = False
+				if insurance[1] == 1:
+					p.pile.notPastCard = False
 
 
 				print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
@@ -354,6 +355,7 @@ while True:
 						if (p.money - p.pile.winnings) >= p.pile.winnings:
 							p.pile.doubleDown = True
 							p.pile.winnings *= 2
+							print(p.pile.winnings)
 							hit(p.hand, Deck)
 						else:
 							print("not enough money")
