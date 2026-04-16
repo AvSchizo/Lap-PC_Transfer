@@ -144,6 +144,7 @@ class handClass():
 		self.id = len(list)
 
 		if self.id > 0:
+			# do this to take care of 'split' hands
 			self.cards = [list[self.id - 1].cards.pop(0)]
 		else:
 			self.cards = []
@@ -231,7 +232,6 @@ while True:
 		while True:
 			p.pile = handContainer[handIteration]
 			p.hand = handContainer[handIteration].cards
-			p.total = handContainer[handIteration].total
 			p.winner = handContainer[handIteration].winner
 
 			p.pile.blCheck = 0
