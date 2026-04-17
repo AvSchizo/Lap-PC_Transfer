@@ -260,8 +260,7 @@ while True:
 				
 				if p.money >= 2*bet and p.pile.notPastCard:
 					validActions.append((dDChoiceKey))
-				if insurance[1] == 1:
-					p.pile.notPastCard = False
+				p.pile.notPastCard = False
 
 
 				print(f"Dealer's cards: {str(dealer.hand[0])} (hidden)")
@@ -281,6 +280,7 @@ while True:
 					if dealer.hand[0] == 'Ace':
 						while True:
 							evenMoney = input("even money? (y)/(n): ")
+							p.pile.notPastCard = True
 							
 							if evenMoney == "y":
 								p.pile.winnings = bet
@@ -320,6 +320,7 @@ while True:
 					while True:
 							
 						insurance[2] = input("Would you like insurance? (y)/(n): ")
+						p.pile.notPastCard = True
 
 						if insurance[2] == "y":
 							insurance[0] = math.ceil(bet/2)
