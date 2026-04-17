@@ -453,7 +453,6 @@ while True:
 				handContainer[i].winner = "dealer"
 			else:
 				handContainer[i].winner = "tie"
-			print(f"debug message, winner: {handContainer[i].winner}")
 		
 
 		# (dealer/p).total < 22 is so you don't have
