@@ -232,7 +232,6 @@ while True:
 			p.pile = handContainer[handIteration]
 			p.hand = handContainer[handIteration].cards
 			p.total = handContainer[handIteration].total
-			p.winner = handContainer[handIteration].winner
 
 			p.pile.blCheck = 0
 			p.pile.noEvenMoney = False
@@ -454,6 +453,7 @@ while True:
 				handContainer[i].winner = "dealer"
 			else:
 				handContainer[i].winner = "tie"
+			print(f"debug message, winner: {handContainer[i].winner}")
 		
 
 		# (dealer/p).total < 22 is so you don't have
@@ -461,7 +461,9 @@ while True:
 
 		for i in range(len(handContainer)):
 
-			if handContainer[i].total > 21 or handContainer[i].blCheck > 0:
+			if handContainer[i].total > 21:
+				continue
+			if handContainer[i].blCheck > 0 and handContainer[i].noEvenMoney:
 				continue
 
 
