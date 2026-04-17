@@ -51,7 +51,7 @@ def newDeck():
 
 
 def Shuffle(deck):
-	random.shuffle(deck)
+	deck = random.shuffle(deck)
 
 def recycle():
 	deck = newDeck()
@@ -140,12 +140,11 @@ class charClass():
 		self.money = money
 
 class handClass():
-	def __init__(self, list):
+	def __init__(self, taking, list):
 		self.id = len(list)
 
 		if self.id > 0:
-			# do this to take care of 'split' hands
-			self.cards = [list[self.id - 1].cards.pop(0)]
+			self.cards = [list[taking].cards.pop(0)]
 		else:
 			self.cards = []
 	
@@ -211,7 +210,7 @@ while True:
 			break
 
 		# list containing first empty hand
-		handContainer = [handClass([])]
+		handContainer = [handClass(0, [])]
 		p.pile = handContainer[0]
 
 		dealer.hand = []
@@ -232,6 +231,7 @@ while True:
 		while True:
 			p.pile = handContainer[handIteration]
 			p.hand = handContainer[handIteration].cards
+			p.total = handContainer[handIteration].total
 			p.winner = handContainer[handIteration].winner
 
 			p.pile.blCheck = 0
@@ -355,6 +355,7 @@ while True:
 						if (p.money - p.pile.winnings) >= p.pile.winnings:
 							p.pile.doubleDown = True
 							p.pile.winnings *= 2
+							print(p.pile.winnings)
 							hit(p.hand, Deck)
 						else:
 							print("not enough money")
@@ -363,7 +364,8 @@ while True:
 						break
 					# split
 					elif p.choice == splitChoiceKey:
-						handContainer.append(handClass(handContainer))
+						appendingId = handContainer[handIteration].id
+						handContainer.append(handClass(appendingId, handContainer))
 					else:
 						print("i dunno")
 				else:
