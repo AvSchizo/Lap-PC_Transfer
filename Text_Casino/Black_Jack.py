@@ -284,10 +284,10 @@ while True:
 							
 							if evenMoney == "y":
 								p.pile.winnings = bet
-								p.pile.winner == "p"
+								p.pile.winner = "p"
+								p.pile.noEvenMoney = True
 								break
 							elif evenMoney == "n":
-								p.pile.noEvenMoney = True
 								break
 							else:
 								print("sorry, I don't understand")
@@ -463,7 +463,7 @@ while True:
 
 			if handContainer[i].total > 21:
 				continue
-			if handContainer[i].blCheck > 0 and handContainer[i].noEvenMoney:
+			if handContainer[i].blCheck > 0 and not handContainer[i].noEvenMoney:
 				continue
 
 
