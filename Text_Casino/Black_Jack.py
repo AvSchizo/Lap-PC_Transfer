@@ -20,7 +20,7 @@ splitChoiceKey = "split"
 
 
 # bust deal sleep time
-bdST = .75
+bdST = 0
 
 debtMoney = 200
 minBet = 10
@@ -303,7 +303,7 @@ while True:
 				
 				
 				if p.pile.total > 21:
-					time.sleep(bdST)
+					next()
 					p.pile.winner = "dealer"
 					print()
 					print("you bust")
@@ -436,7 +436,7 @@ while True:
 			dealer.total = findTotal(dealer.hand)
 			printCards(dealer)
 			if dealer.total > 21:
-				time.sleep(bdST)
+				next()
 				print()
 				print("dealer busts")
 			next()
